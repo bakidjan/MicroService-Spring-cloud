@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: r1
+          uri: http://localhost:8081
+          predicates:
+          - Path= /inventories/**
+        - id: r2
+          uri: http://localhost:8082
+          predicates:
+          - Path= /customers/**
+    discovery:
+      enabled: false
+  application:
+    name: gateway-proxy
+server:
+  port: 8083
