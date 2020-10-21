@@ -23,6 +23,9 @@ import java.util.Date;
 	class Billing{
 	 @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	 private Long id;
+	 /*
+	 Temproly permet de personaliser la date
+	  */
 	 @Temporal(TemporalType.DATE)
 	 private Date billingDate;
 	 private Long customerID;
@@ -45,6 +48,10 @@ import java.util.Date;
 	@RepositoryRestResource
 	interface ProductItemRepository extends JpaRepository<ProductItem, Long>{}
 
+	/*
+	Cette projection retourne les infos de la facture avec
+	la liste des produit assiciés
+	 */
 	@Projection(name = "fullBilling", types = Billing.class)
 	interface BillingProjection{
 		public Long getId();
