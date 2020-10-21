@@ -23,6 +23,7 @@ import java.util.Date;
 	class Billing{
 	 @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	 private Long id;
+	 @Temporal(TemporalType.DATE)
 	 private Date billingDate;
 	 private Long customerID;
 	 @OneToMany(mappedBy = "billing")
