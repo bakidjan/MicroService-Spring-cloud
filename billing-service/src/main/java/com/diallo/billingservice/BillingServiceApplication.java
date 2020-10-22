@@ -1,6 +1,7 @@
 package com.diallo.billingservice;
 
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -98,13 +99,23 @@ import java.util.Date;
 
 	@SpringBootApplication
 	@EnableFeignClients
-	public class BillingServiceApplication {
+	public class BillingServiceApplication implements CommandLineRunner{
+		@Autowired
+		BillingRepository billingRepository;
+		@Autowired
+		ProductItemRepository productItemRepository;
+		@Autowired
+		RepositoryRestConfiguration restConfiguration;
+		@Autowired
+		CustomerService customerService;
+		@Autowired
+		ProductService productService;
 
 		public static void main(String[] args) {
 			SpringApplication.run(BillingServiceApplication.class, args);
 		}
 
-		@Bean
+		//@Bean
 		CommandLineRunner start(BillingRepository billingRepository, ProductItemRepository productItemRepository,
 								RepositoryRestConfiguration restConfiguration, CustomerService customerService,
 								ProductService productService){
@@ -127,4 +138,23 @@ import java.util.Date;
 			};
 		}
 
+		@Override
+		public void run(String... args) throws Exception {
+			restConfiguration.exposeIdsFor(Billing.class);
+			Billing bill1 = billingRepository.save(new Billing(null, new Date(), 1L, null));
+			Customer c1 = customerService.findCustomerById(1L);
+			System.out.println("*************info Customer*******************");
+			System.out.println("ID = "+c1.getId()+ ", Name = "+c1.getName()+ ", Adresse = "+c1.getAddress()+ ", Email = "+c1.getEmail());
+
+			Product p1 = productService.findProductById(1L);
+			System.out.println("*************info Product*******************");
+			System.out.println("ProductID = "+p1.getId()+ ", ProductName = "+p1.getName()+ ", ProductPrice = "+p1.getPrice());
+
+			ProductItem pIt = productItemRepository.save(new ProductItem(null, p1.getId(), 20, 900, bill1));
+			productItemRepository.save(new ProductItem(null, 2L, 32, 400, bill1));
+			productItemRepository.save(new ProductItem(null, 3L, 67, 600, bill1));
+			System.out.println("*************info ProductItems*******************");
+			System.out.println(pIt);
+
+		}
 	}
