@@ -25,7 +25,7 @@ import java.util.Date;
 	 @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	 private Long id;
 	 /*
-	 Temproly permet de personaliser la date
+	 Temporoly permet de personaliser la date
 	  */
 	 @Temporal(TemporalType.DATE)
 	 private Date billingDate;
@@ -120,6 +120,7 @@ import java.util.Date;
 								RepositoryRestConfiguration restConfiguration, CustomerService customerService,
 								ProductService productService){
 			return args -> {
+				/*
 				restConfiguration.exposeIdsFor(Billing.class);
 				Billing bill1 = billingRepository.save(new Billing(null, new Date(), 1L, null));
 				Customer c1 = customerService.findCustomerById(1L);
@@ -135,6 +136,7 @@ import java.util.Date;
 				productItemRepository.save(new ProductItem(null, 3L, 67, 600, bill1));
 				System.out.println("*************info ProductItems*******************");
 				System.out.println(pIt);
+				*/
 			};
 		}
 
@@ -150,11 +152,13 @@ import java.util.Date;
 			System.out.println("*************info Product*******************");
 			System.out.println("ProductID = "+p1.getId()+ ", ProductName = "+p1.getName()+ ", ProductPrice = "+p1.getPrice());
 
-			ProductItem pIt = productItemRepository.save(new ProductItem(null, p1.getId(), 20, 900, bill1));
-			productItemRepository.save(new ProductItem(null, 2L, 32, 400, bill1));
-			productItemRepository.save(new ProductItem(null, 3L, 67, 600, bill1));
+			productItemRepository.save(new ProductItem(null, p1.getId(), p1.getQuantity(), p1.getPrice(), bill1));
+			Product p2 = productService.findProductById(2L);
+			productItemRepository.save(new ProductItem(null, p2.getId(), p2.getQuantity(), p2.getPrice(), bill1));
+			Product p3 = productService.findProductById(3L);
+			productItemRepository.save(new ProductItem(null, p3.getId(), p3.getQuantity(), p3.getPrice(), bill1));
 			System.out.println("*************info ProductItems*******************");
-			System.out.println(pIt);
+			//System.out.println(pIt1);
 
 		}
 	}
